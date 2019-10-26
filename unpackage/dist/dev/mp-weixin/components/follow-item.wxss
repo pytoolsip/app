@@ -60,7 +60,20 @@
 	border-radius: 0;
 }
 .follow-body {
-	margin-top: 4px;
+	color: #686868;
+	font-size: 14px;
+}
+.follow-content {
+	line-height: 20px;
+	color: #686868;
+	font-size: 14px;
+	padding: 4px;
+	display: -webkit-box;
+	overflow: hidden;
+	-o-text-overflow: ellipsis;
+	   text-overflow: ellipsis;
+	-webkit-line-clamp: 3;
+	-webkit-box-orient: vertical;
 }
 .follow-footer {
 	font-size: 10px;

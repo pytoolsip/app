@@ -196,6 +196,7 @@
 						};
 						if (activeData.type == "follow") {
 							item.type = '';
+							item = "测试内容。。。房贷首付减肥的疯狂的放射科大夫南昌飞机反奉公守法的咖啡机东法兰克的时刻士大夫士大夫根据德国倒是开发商的肌肤数量大幅减少三十东方放声大哭发射点发射点能否从南昌南昌这些"
 							activeData.items.push({
 								name: "用户",
 								pic: "/static/img/logo.png",
@@ -208,6 +209,8 @@
 								articleCount: 0,
 								toolCountLabel: "工具数",
 								toolCount: 0,
+								// isMedia: true,
+								isText: true,
 							});
 						} else if (activeData.type == "media") {
 							activeData.items.push(item);

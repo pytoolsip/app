@@ -12,7 +12,8 @@
 			</view>
 		</view>
 		<view class="follow-body">
-			<media-item :options="options.content" @click="mediaClick"></media-item>
+			<media-item :options="options.content" @click="mediaClick" v-if="options.isMedia"></media-item>
+			<text class="follow-content" v-if="options.isText">{{options.content}}</text>
 		</view>
 		<view class="follow-footer">
 			<view class="follow-info flex-row">
@@ -106,7 +107,20 @@
 	}
 	
 	.follow-body {
-		margin-top: 4px;
+		color: #686868;
+		font-size: 14px;
+	}
+	
+	.follow-content {
+		line-height: 20px;
+		color: #686868;
+		font-size: 14px;
+		padding: 4px;
+		display: -webkit-box;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		-webkit-line-clamp: 3;
+		-webkit-box-orient: vertical;
 	}
 	
 	.follow-footer {
