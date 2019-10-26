@@ -1,6 +1,6 @@
 {
   "pages": [
-    "pages/index/index",
+    "pages/home/index",
     "pages/tool/index",
     "pages/notice/index",
     "pages/mine/index"
@@ -16,7 +16,7 @@
     "selectedColor": "#007AFF",
     "list": [
       {
-        "pagePath": "pages/index/index",
+        "pagePath": "pages/home/index",
         "iconPath": "static/img/tabbar/home.png",
         "selectedIconPath": "static/img/tabbar/homeactive.png",
         "text": "首页"
