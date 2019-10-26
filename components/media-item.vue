@@ -3,13 +3,13 @@
 		<view class="media-header">
 			<text>{{options.title}}</text>
 		</view>
-		<view class="media-body">
+		<view class="media-body media-space-between">
 			<view class="media-content">
 				<text>{{options.description}}</text>
 			</view>
 			<image class="media-image" v-if="options.thumbnail" :src="options.thumbnail"></image>
 		</view>
-		<view class="media-footer media-info">
+		<view class="media-footer media-space-between" v-if="options.type">
 			<view class="media-info flex-row">
 				<text class="info-text">{{options.type}}</text>
 				<text class="info-text">·</text>
@@ -23,7 +23,7 @@
 				<text class="info-text" v-if="options.collection">{{options.collection}}</text>
 			</view>
 		</view>
-		<view class="media-item-line" style="position: absolute;"></view>
+		<view class="media-item-line" style="position: absolute;" v-if="options.line"></view>
 	</view>
 </template>
 
@@ -61,10 +61,11 @@
 		position: relative;
 		flex-direction: column;
 		padding: 20upx 30upx;
+		background-color: #FFFFFF;
 	}
 	
 	.media-item-hover{
-	    background-color: #eee;
+	    background-color: #F1F1F1;
 	}
 	
 	.media-header {
@@ -75,10 +76,6 @@
 	}
 	
 	.media-body {
-		display: flex;
-		flex-direction: row;
-		align-items: center;
-		justify-content: space-between;
 		margin-top: 4px;
 	}
 	
@@ -107,13 +104,16 @@
 	}
 	
 	.media-footer {
+		font-size: 10px;
+		color: #868686;
+		margin-top: 6px;
+	}
+	
+	.media-space-between {
 		display: flex;
 		flex-direction: row;
 		align-items: center;
 		justify-content: space-between;
-		font-size: 10px;
-		color: #868686;
-		margin-top: 6px;
 	}
 	
 	.media-info > .info-text {

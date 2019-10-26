@@ -131,7 +131,10 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var uniIcons = function uniIcons() {return __webpack_require__.e(/*! import() | components/uni-icons */ "components/uni-icons").then(__webpack_require__.bind(null, /*! ../../components/uni-icons.vue */ 47));};var mediaItem = function mediaItem() {return __webpack_require__.e(/*! import() | components/media-item */ "components/media-item").then(__webpack_require__.bind(null, /*! ../../components/media-item.vue */ 54));};
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var uniIcons = function uniIcons() {return __webpack_require__.e(/*! import() | components/uni-icons */ "components/uni-icons").then(__webpack_require__.bind(null, /*! ../../components/uni-icons.vue */ 47));};var mediaItem = function mediaItem() {return __webpack_require__.e(/*! import() | components/media-item */ "components/media-item").then(__webpack_require__.bind(null, /*! ../../components/media-item.vue */ 54));};var followItem = function followItem() {return __webpack_require__.e(/*! import() | components/follow-item */ "components/follow-item").then(__webpack_require__.bind(null, /*! ../../components/follow-item.vue */ 68));};
+
+
+
 
 
 
@@ -183,7 +186,10 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
 
 
 // 起始Tab下标
-var START_TAB_INDEX = 1;
+var START_TAB_INDEX = 0;
+
+// Tab下标类型映射
+var TAB_INDEX_TYPE_MAP = ["follow", "media"];
 
 // 缓存每页最多
 var MAX_CACHE_DATA_LENGTH = 60;var _default =
@@ -191,7 +197,8 @@ var MAX_CACHE_DATA_LENGTH = 60;var _default =
 {
   components: {
     uniIcons: uniIcons,
-    mediaItem: mediaItem },
+    mediaItem: mediaItem,
+    followItem: followItem },
 
   data: function data() {
     return {
@@ -256,9 +263,10 @@ var MAX_CACHE_DATA_LENGTH = 60;var _default =
 
   onLoad: function onLoad() {var _this = this;
     // 初始化信息列表
-    this.tabList.forEach(function (tab) {
+    this.tabList.forEach(function (tab, index) {
       _this.dataList.push({
         items: [],
+        type: TAB_INDEX_TYPE_MAP[index],
         isLoading: false,
         loadingText: "已经到最底了~",
         isPulling: false,
@@ -308,7 +316,7 @@ var MAX_CACHE_DATA_LENGTH = 60;var _default =
       // 请求数据
       setTimeout(function () {
         for (var i = 0; i < 4; i++) {
-          activeData.items.push({
+          var item = {
             title: "的时间发射犯得上发生的故事的方法点发射点发嘀咕咖啡馆颠覆国家工具" + activeData.items.length,
             type: "工具",
             description: "测试工具。。。。。。混沌复合时空的合法代表VS的的方式打开方式决定恢复乐山大佛乐山大佛快递费是v的封建士大夫受到核辐射的花费的时间很少看粉红色的吧对方就会收到客户发生的核辐射看",
@@ -317,8 +325,26 @@ var MAX_CACHE_DATA_LENGTH = 60;var _default =
             time: "2019-10-26",
             countLabel: "阅读量",
             count: 0,
-            collection: "未收藏" });
+            collection: "未收藏" };
 
+          if (activeData.type == "follow") {
+            item.type = '';
+            activeData.items.push({
+              name: "用户",
+              pic: "/static/img/logo.png",
+              isFollowed: i % 2 == 0 ? true : false,
+              followLabel: i % 2 == 0 ? "已关注" : "关注",
+              content: item,
+              followCountLabel: "关注量",
+              followCount: 0,
+              articleCountLabel: "文章数",
+              articleCount: 0,
+              toolCountLabel: "工具数",
+              toolCount: 0 });
+
+          } else if (activeData.type == "media") {
+            activeData.items.push(item);
+          }
         }
         // 标记加载完成
         activeData.isLoading = false;

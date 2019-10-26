@@ -23,7 +23,8 @@
 						</div>
 					</refresh>
 					<cell v-for="(item,idx1) in data.items" :key="item.id">
-						<media-item :options="item" @click="showDetail(item)"></media-item>
+						<follow-item :options="item" @click="showDetail(item)" :v-if="data.type == 'follow'"></follow-item>
+						<media-item :options="item" @click="showDetail(item)" :v-if="data.type == 'media'"></media-item>
 					</cell>
 					<cell class="loading-more" v-if="data.isLoading || data.items.length > dataLenLimit">
 						<text class="loading-more-text">{{data.loadingText}}</text>
@@ -33,7 +34,8 @@
 				<!-- #ifndef APP-NVUE -->
 				<scroll-view class="scroll-v" enableBackToTop="true" scroll-y @scrolltolower="loadMore(idx)" @scroll="onScroll" :scroll-top="data.scrollTop.current" scroll-with-animation="true">
 					<view v-for="(item,idx1) in data.items" :key="item.id">
-						<media-item :options="item" @click="showDetail(item)"></media-item>
+						<follow-item :options="item" :v-if="data.type == 'follow'"></follow-item>
+						<media-item :options="item" @click="showDetail(item)" :v-if="data.type == 'media'"></media-item>
 					</view>
 					<view class="loading-more" v-if="data.isLoading || data.length > dataLenLimit">
 						<text class="loading-more-text">{{data.loadingText}}</text>
@@ -48,9 +50,13 @@
 <script>
 	import uniIcons from "../../components/uni-icons.vue";
 	import mediaItem from "../../components/media-item.vue";
+	import followItem from "../../components/follow-item.vue";
 	
 	// 起始Tab下标
-	const START_TAB_INDEX = 1;
+	const START_TAB_INDEX = 0;
+	
+	// Tab下标类型映射
+	const TAB_INDEX_TYPE_MAP = ["follow", "media"];
 	
 	// 缓存每页最多
 	const MAX_CACHE_DATA_LENGTH = 60;
@@ -59,6 +65,7 @@
 		components: {
 			uniIcons,
 			mediaItem,
+			followItem,
 		},
 		data() {
 			return {
@@ -123,9 +130,10 @@
 		},
 		onLoad() {
 			// 初始化信息列表
-			this.tabList.forEach((tab) => {
+			this.tabList.forEach((tab, index) => {
 				this.dataList.push({
 					items: [],
+					type: TAB_INDEX_TYPE_MAP[index],
 					isLoading: false,
 					loadingText: "已经到最底了~",
 					isPulling: false,
@@ -175,7 +183,7 @@
 				// 请求数据
 				setTimeout(() => {
 					for (let i = 0; i < 4; i++) {
-						activeData.items.push({
+						let item = {
 							title: "的时间发射犯得上发生的故事的方法点发射点发嘀咕咖啡馆颠覆国家工具" + activeData.items.length,
 							type: "工具",
 							description: "测试工具。。。。。。混沌复合时空的合法代表VS的的方式打开方式决定恢复乐山大佛乐山大佛快递费是v的封建士大夫受到核辐射的花费的时间很少看粉红色的吧对方就会收到客户发生的核辐射看",
@@ -185,7 +193,25 @@
 							countLabel: "阅读量",
 							count: 0,
 							collection: "未收藏",
-						});
+						};
+						if (activeData.type == "follow") {
+							item.type = '';
+							activeData.items.push({
+								name: "用户",
+								pic: "/static/img/logo.png",
+								isFollowed: i%2 == 0 ? true : false,
+								followLabel: i%2 == 0 ? "已关注" : "关注",
+								content: item,
+								followCountLabel: "关注量",
+								followCount: 0,
+								articleCountLabel: "文章数",
+								articleCount: 0,
+								toolCountLabel: "工具数",
+								toolCount: 0,
+							});
+						} else if (activeData.type == "media") {
+							activeData.items.push(item);
+						}
 					}
 					// 标记加载完成
 					activeData.isLoading = false;

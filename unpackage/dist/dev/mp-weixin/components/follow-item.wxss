@@ -21,12 +21,11 @@
 	    -ms-flex-direction: column;
 	        flex-direction: column;
 }
-.media-item {
+.follow-item {
 	display: -webkit-box;
 	display: -webkit-flex;
 	display: -ms-flexbox;
 	display: flex;
-	position: relative;
 	-webkit-box-orient: vertical;
 	-webkit-box-direction: normal;
 	-webkit-flex-direction: column;
@@ -34,47 +33,41 @@
 	        flex-direction: column;
 	padding: 20rpx 30rpx;
 	background-color: #FFFFFF;
+	margin-top: 6px;
+	border: 1px #E9E9E9 solid;
 }
-.media-item-hover{
-    background-color: #F1F1F1;
-}
-.media-header {
+.follow-header {
 	color: #333333;
-	font-size: 16px;
+	font-size: 15px;
 	line-height: 24px;
-	font-weight: bold;
 }
-.media-body {
+.follow-image {
+	width: 30px;
+	height: 30px;
+	border-radius: 50%;
+}
+.follow-label {
+	color: #007AFF;
+	font-size: 14px;
+	padding: 0px 12px;
+	border: 1px #007AFF solid;
+	border-radius: 20px;
+}
+.followed-label {
+	color: #686868;
+	padding: 4px;
+	border: none;
+	border-radius: 0;
+}
+.follow-body {
 	margin-top: 4px;
 }
-.media-content {
-	width: calc(100% - 80px);
-	line-height: 20px;
-	font-size: 12px;
-	display: -webkit-box;
-	overflow: hidden;
-	-o-text-overflow: ellipsis;
-	   text-overflow: ellipsis;
-	-webkit-line-clamp: 3;
-	-webkit-box-orient: vertical;
-}
-.media-type {
-	color: #868686;
-	font-weight: bold;
-}
-.media-image {
-	width: 80px;
-	height: 60px;
-	margin-left: 4px;
-	border: 1px #E1E1E1 solid;
-	border-radius: 6px;
-}
-.media-footer {
+.follow-footer {
 	font-size: 10px;
 	color: #868686;
 	margin-top: 6px;
 }
-.media-space-between {
+.follow-space-between {
 	display: -webkit-box;
 	display: -webkit-flex;
 	display: -ms-flexbox;
@@ -93,16 +86,12 @@
 	    -ms-flex-pack: justify;
 	        justify-content: space-between;
 }
-.media-info > .info-text {
+.follow-user-info text {
+	padding: 12rpx;
+}
+.follow-info > .info-text {
 	padding-left: 4rpx;
 	padding-right: 4rpx;
 }
-.media-item-line {
-	position: absolute;
-	left: 30rpx;
-	right: 30rpx;
-	bottom: 0;
-	height: 1rpx;
-	background-color: #EAEAEA;
-}
+
 

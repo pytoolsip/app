@@ -2,6 +2,7 @@
   "navigationStyle": "custom",
   "usingComponents": {
     "uni-icons": "/components/uni-icons",
-    "media-item": "/components/media-item"
+    "media-item": "/components/media-item",
+    "follow-item": "/components/follow-item"
   }
 }
