@@ -131,7 +131,7 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var uniIcons = function uniIcons() {return __webpack_require__.e(/*! import() | components/uni-icons */ "components/uni-icons").then(__webpack_require__.bind(null, /*! ../../components/uni-icons.vue */ 47));};var mediaItem = function mediaItem() {return __webpack_require__.e(/*! import() | components/media-item */ "components/media-item").then(__webpack_require__.bind(null, /*! ../../components/media-item.vue */ 54));};var followItem = function followItem() {return __webpack_require__.e(/*! import() | components/follow-item */ "components/follow-item").then(__webpack_require__.bind(null, /*! ../../components/follow-item.vue */ 68));};
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var uniIcons = function uniIcons() {return __webpack_require__.e(/*! import() | components/uni-icons */ "components/uni-icons").then(__webpack_require__.bind(null, /*! ../../components/uni-icons.vue */ 47));};var mediaItem = function mediaItem() {return __webpack_require__.e(/*! import() | components/media-item */ "components/media-item").then(__webpack_require__.bind(null, /*! ../../components/media-item.vue */ 54));};var followItem = function followItem() {return __webpack_require__.e(/*! import() | components/follow-item */ "components/follow-item").then(__webpack_require__.bind(null, /*! ../../components/follow-item.vue */ 61));};
 
 
 

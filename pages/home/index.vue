@@ -340,7 +340,9 @@
 		display: flex;
 		flex-direction: row;
 		align-items: center;
+		/* #ifdef APP-PLUS */
 		justify-content: space-between;
+		/* #endif */
 		width: 100%;
 		margin-top: 20px;
 	}
