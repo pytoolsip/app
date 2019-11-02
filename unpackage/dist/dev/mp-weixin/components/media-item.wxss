@@ -44,6 +44,9 @@
 	line-height: 24px;
 	font-weight: bold;
 }
+.media-header-subtitle {
+	font-weight: normal;
+}
 .media-body {
 	margin-top: 4px;
 }
@@ -96,6 +99,12 @@
 .media-info > .info-text {
 	padding-left: 4rpx;
 	padding-right: 4rpx;
+}
+.media-info > .info-image {
+	width: 12px;
+	height: 12px;
+	border: 1px #E1E1E1 solid;
+	border-radius: 50%;
 }
 .media-item-line {
 	position: absolute;

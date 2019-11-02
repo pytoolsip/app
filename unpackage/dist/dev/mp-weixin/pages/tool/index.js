@@ -122,30 +122,287 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0; //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-var _default =
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var uniIcons = function uniIcons() {return __webpack_require__.e(/*! import() | components/uni-icons */ "components/uni-icons").then(__webpack_require__.bind(null, /*! ../../components/uni-icons.vue */ 47));};var mediaItem = function mediaItem() {return __webpack_require__.e(/*! import() | components/media-item */ "components/media-item").then(__webpack_require__.bind(null, /*! ../../components/media-item.vue */ 54));};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// 起始Tab下标
+var START_TAB_INDEX = 1;
+
+// 缓存每页最多
+var MAX_CACHE_DATA_LENGTH = 60;var _default =
+
 {
+  components: {
+    uniIcons: uniIcons,
+    mediaItem: mediaItem },
+
   data: function data() {
     return {
-      title: 'PyToolsIP' };
+      tabIdx: -1,
+      tabList: [
+      {
+        name: "我的",
+        id: "mine" },
+
+      {
+        name: "最新",
+        id: "newest" }],
+
+
+      dataList: [],
+      dataLenLimit: 8, // 显示加载提示的数据长度限制
+      category: {
+        list: ["所有工具", "开发工具", "产品工具", "娱乐工具"],
+        index: 0 } };
+
 
   },
-  onLoad: function onLoad() {
+  computed: {
+    isShowTabBarLine: function isShowTabBarLine() {
+      var activeData = this.dataList[this.tabIdx];
+      var scrollTop = activeData && activeData.scrollTop.old || 0;
+      if (scrollTop > 20) {
+        return true;
+      }
+      return false;
+    },
+    contentHeight: function contentHeight() {
+      return "calc(100% - 86px)";
+    },
+    contentMarginTop: function contentMarginTop() {
+      var newTop = 20;
+      var activeData = this.dataList[this.tabIdx];
+      var scrollTop = activeData && activeData.scrollTop.old || 0;
+      if (scrollTop > 20) {
+        return "0px";
+      }
+      return newTop - scrollTop + "px";
+    } },
 
+  onLoad: function onLoad() {var _this = this;
+    // 初始化信息列表
+    this.tabList.forEach(function (tab, index) {
+      _this.dataList.push({
+        items: [],
+        isLoading: false,
+        loadingText: "已经到最底了~",
+        isPulling: false,
+        refreshFlag: false,
+        isRefreshing: false,
+        refreshText: "已刷新",
+        navigateFlag: false,
+        scrollTop: {
+          count: 0,
+          old: 0,
+          current: 0 } });
+
+
+    });
+    // 切换Tab
+    this.switchTab(START_TAB_INDEX);
   },
-  methods: {} };exports.default = _default;
+  methods: {
+    // 点击搜索按钮
+    onSearch: function onSearch(e) {
+
+    },
+    // 点击切换类别
+    onChangeCategory: function onChangeCategory(e) {
+
+    },
+    // 滚动tab内容
+    onScroll: function onScroll(e) {
+      var activeData = this.dataList[this.tabIdx];
+      activeData.scrollTop.old = e.target.scrollTop || e.detail.scrollTop;
+    },
+    onGoTop: function onGoTop(e) {var _this2 = this;
+      var activeData = this.dataList[this.tabIdx];
+      activeData.scrollTop.count++;
+      setTimeout(function () {
+        if (activeData.scrollTop.count > 1) {
+          activeData.scrollTop.current = activeData.scrollTop.old;
+          _this2.$nextTick(function () {
+            activeData.scrollTop.current = 0;
+          });
+        }
+        activeData.scrollTop.count = 0;
+      }, 300);
+    },
+    // 加载tab数据
+    loadTabData: function loadTabData(index, callback) {
+      var activeData = this.dataList[index];
+      // 标记正在加载
+      activeData.isLoading = true;
+      activeData.loadingText = "正在加载...";
+      // 请求数据
+      setTimeout(function () {
+        for (var i = 0; i < 4; i++) {
+          activeData.items.push({
+            title: "的时间发射犯得上发生的故事的方法点发射点发嘀咕咖啡馆颠覆国家工具" + activeData.items.length,
+            subTitle: "子标题",
+            type: "工具",
+            description: "测试工具。。。。。。混沌复合时空的合法代表VS的的方式打开方式决定恢复乐山大佛乐山大佛快递费是v的封建士大夫受到核辐射的花费的时间很少看粉红色的吧对方就会收到客户发生的核辐射看",
+            thumbnail: "/static/img/logo.png",
+            author_pic: "/static/img/logo.png",
+            author: "作者",
+            time: "2019-10-26",
+            countLabel: "阅读量",
+            count: 0,
+            collection: "未收藏" });
+
+        }
+        // 标记加载完成
+        activeData.isLoading = false;
+        activeData.loadingText = "加载更多...";
+        if (callback != null) {
+          callback();
+        }
+      }, 500);
+    },
+    // 切换tab
+    switchTab: function switchTab(index) {
+      // 判断将要切换的tab是否有数据，没有的话，先请求数据
+      if (this.dataList[index].items.length === 0) {
+        this.loadTabData(index, null);
+      }
+      // 判断要切换的tab是否为当前tab
+      if (this.tabIdx === index) {
+        return;
+      }
+      // 清除原tab的缓存数据
+      var activeData = this.dataList[this.tabIdx];
+      if (this.tabIdx >= 0 && activeData.items.length > MAX_CACHE_DATA_LENGTH) {
+        activeData.items.length = MAX_CACHE_DATA_LENGTH;
+      }
+      // 更新当前tab下标
+      this.tabIdx = index;
+    },
+    // 点击tab
+    onTabTap: function onTabTap(e) {
+      this.switchTab(e.target.dataset.current || e.currentTarget.dataset.current);
+    },
+    // 响应tab更改
+    onTabChange: function onTabChange(e) {
+      this.switchTab(e.target.current || e.detail.current);
+    },
+    // 加载更多
+    loadMore: function loadMore(e) {
+      this.loadTabData(this.tabIdx, null);
+    },
+    // 刷新tab数据
+    refreshTabData: function refreshTabData(callback) {
+      var activeData = this.dataList[this.tabIdx];
+      // 标记正在刷新
+      activeData.isRefreshing = true;
+      activeData.refreshText = "正在刷新...";
+      // 请求数据
+      setTimeout(function () {
+        for (var i = 10; i > 0; i--) {
+          activeData.items.unshift({
+            title: "工具-" + i,
+            type: "工具",
+            thumbnail: "/static/img/logo.png",
+            author: "作者",
+            time: "2019-10-26",
+            count: 0 });
+
+        }
+        // 标记完成刷新
+        activeData.isRefreshing = false;
+        activeData.refreshText = "已刷新";
+        if (callback != null) {
+          callback();
+        }
+      }, 1000);
+    },
+    // 刷新tab
+    onRefresh: function onRefresh(e) {
+      var activeData = this.dataList[this.tabIdx];
+      if (!activeData.refreshFlag) {
+        return;
+      }
+      // 刷新tab数据
+      this.refreshTabData(function () {
+        activeData.isPulling = true;
+        activeData.refreshFlag = false;
+        setTimeout(function () {// Fix ios和Android 动画时间相反问题
+          activeData.isPulling = false;
+        }, 500);
+      });
+    },
+    onPullingDown: function onPullingDown(e) {
+      var activeData = this.dataList[this.tabIdx];
+      if (activeData.isRefreshing || activeData.isPulling) {
+        return;
+      }
+      if (Math.abs(e.pullingDistance) > Math.abs(e.viewHeight)) {
+        activeData.refreshFlag = true;
+        activeData.refreshText = "释放立即刷新";
+      } else {
+        activeData.refreshFlag = false;
+        activeData.refreshText = "下拉可以刷新";
+      }
+    },
+    showDetail: function showDetail(e) {
+
+    } } };exports.default = _default;
 
 /***/ }),
 

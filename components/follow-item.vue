@@ -75,8 +75,7 @@
 		flex-direction: column;
 		padding: 20upx 30upx;
 		background-color: #FFFFFF;
-		margin-top: 6px;
-		border: 1px #E9E9E9 solid;
+		border-bottom: 6px #E9E9E9 solid;
 	}
 	
 	.follow-header {
@@ -86,8 +85,9 @@
 	}
 	
 	.follow-image {
-		width: 30px;
-		height: 30px;
+		width: 28px;
+		height: 28px;
+		border: 2px #E9E9E9 solid;
 		border-radius: 50%;
 	}
 	

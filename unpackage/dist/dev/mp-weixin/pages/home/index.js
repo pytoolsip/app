@@ -186,7 +186,7 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
 
 
 // 起始Tab下标
-var START_TAB_INDEX = 0;
+var START_TAB_INDEX = 1;
 
 // Tab下标类型映射
 var TAB_INDEX_TYPE_MAP = ["follow", "media"];
@@ -202,7 +202,6 @@ var MAX_CACHE_DATA_LENGTH = 60;var _default =
 
   data: function data() {
     return {
-      title: "PyToolsIP-首页",
       tabIdx: -1,
       tabList: [
       {
@@ -318,9 +317,11 @@ var MAX_CACHE_DATA_LENGTH = 60;var _default =
         for (var i = 0; i < 4; i++) {
           var item = {
             title: "的时间发射犯得上发生的故事的方法点发射点发嘀咕咖啡馆颠覆国家工具" + activeData.items.length,
+            subTitle: "子标题",
             type: "工具",
             description: "测试工具。。。。。。混沌复合时空的合法代表VS的的方式打开方式决定恢复乐山大佛乐山大佛快递费是v的封建士大夫受到核辐射的花费的时间很少看粉红色的吧对方就会收到客户发生的核辐射看",
             thumbnail: "/static/img/logo.png",
+            author_pic: "/static/img/logo.png",
             author: "作者",
             time: "2019-10-26",
             countLabel: "阅读量",

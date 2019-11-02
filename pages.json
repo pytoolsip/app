@@ -7,6 +7,28 @@
 				"app-plus":{"titleNView":false}
 			}
 		},
+		// #ifdef APP-PLUS || H5
+		{
+			"path": "pages/tool/index",
+			"style": {
+				"navigationBarTitleText": "工具",
+				"app-plus":{
+					"titleNView": {
+						"type": "transparent",
+						"titleColor": "#333333",
+						"backgroundColor": "#F1F1F1",
+						"searchInput": {
+							"backgroundColor": "#FFFFFF",
+							"borderRadius": "6px",
+							"placeholder": "搜索工具",
+							"disabled": true
+						}
+					}
+				}
+			}
+		},
+		// #endif
+		// #ifndef APP-PLUS || H5
 		{
 			"path": "pages/tool/index",
 			"style": {
@@ -14,6 +36,7 @@
 				"app-plus":{"titleNView":false}
 			}
 		},
+		// #endif
 		{
 			"path": "pages/notice/index",
 			"style": {

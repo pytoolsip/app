@@ -2,6 +2,9 @@
 	<view class="media-item" hover-class="media-item-hover" v-if="options.title" @click="click">
 		<view class="media-header">
 			<text>{{options.title}}</text>
+			<view class="media-header-subtitle" v-if="options.subTitle">
+				<text>[{{options.subTitle}}]</text>
+			</view>
 		</view>
 		<view class="media-body media-space-between">
 			<view class="media-content">
@@ -9,15 +12,16 @@
 			</view>
 			<image class="media-image" v-if="options.thumbnail" :src="options.thumbnail"></image>
 		</view>
-		<view class="media-footer media-space-between" v-if="options.type">
+		<view class="media-footer media-space-between" v-if="options.author">
 			<view class="media-info flex-row">
-				<text class="info-text">{{options.type}}</text>
-				<text class="info-text">·</text>
-				<text class="info-text">{{options.author}}</text>
-				<text class="info-text">·</text>
-				<text class="info-text">{{options.time}}</text>
-				<text class="info-text">·</text>
-				<text class="info-text">{{options.countLabel}}&nbsp;{{options.count}}</text>
+				<image class="info-text info-image" v-if="options.author_pic" :src="options.author_pic"></image>
+				<text class="info-text" v-if="options.author">{{options.author}}</text>
+				<text class="info-text" v-if="options.author">·</text>
+				<text class="info-text" v-if="options.time">{{options.time}}</text>
+				<text class="info-text" v-if="options.time">·</text>
+				<text class="info-text" v-if="options.countLabel&&options.count">{{options.countLabel}}&nbsp;{{options.count}}</text>
+				<text class="info-text" v-if="options.countLabel">·</text>
+				<text class="info-text" v-if="options.type">{{options.type}}</text>
 				<!-- 是否收藏信息 -->
 				<text class="info-text" v-if="options.collection">·</text>
 				<text class="info-text" v-if="options.collection">{{options.collection}}</text>
@@ -75,6 +79,10 @@
 		font-weight: bold;
 	}
 	
+	.media-header-subtitle {
+		font-weight: normal;
+	}
+	
 	.media-body {
 		margin-top: 4px;
 	}
@@ -119,6 +127,13 @@
 	.media-info > .info-text {
 		padding-left: 4upx;
 		padding-right: 4upx;
+	}
+	
+	.media-info > .info-image {
+		width: 12px;
+		height: 12px;
+		border: 1px #E1E1E1 solid;
+		border-radius: 50%;
 	}
 	
 	.media-item-line {

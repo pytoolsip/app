@@ -317,6 +317,7 @@
 
 
 
+
 page {
 	width: 100%;
 	min-height: 100%;
@@ -401,8 +402,6 @@ page {
     background-color: #E1E1E1;
 }
 /* Tab 内容 */
-.tab-content {
-}
 .scroll-v {
 	display: -webkit-box;
 	display: -webkit-flex;
