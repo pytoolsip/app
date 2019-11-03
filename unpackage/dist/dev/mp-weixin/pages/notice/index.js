@@ -122,30 +122,230 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0; //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-var _default =
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var uniIcons = function uniIcons() {return __webpack_require__.e(/*! import() | components/uni-icons */ "components/uni-icons").then(__webpack_require__.bind(null, /*! ../../components/uni-icons.vue */ 47));};var noticeItem = function noticeItem() {return __webpack_require__.e(/*! import() | components/notice-item */ "components/notice-item").then(__webpack_require__.bind(null, /*! ../../components/notice-item.vue */ 68));};var _default =
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 {
+  components: {
+    uniIcons: uniIcons,
+    noticeItem: noticeItem },
+
   data: function data() {
     return {
-      title: 'PyToolsIP' };
+      items: [],
+      isLoading: false,
+      loadingText: "已经到最底了~",
+      isPulling: false,
+      refreshFlag: false,
+      isRefreshing: false,
+      refreshText: "已刷新",
+      scrollTop: {
+        count: 0,
+        old: 0,
+        current: 0 },
 
+      dataLenLimit: 8 // 显示加载提示的数据长度限制
+    };
   },
+  computed: {
+    tabBarHeight: function tabBarHeight() {
+      var newHeight = 80;
+      var scrollTop = this.scrollTop.old || 0;
+      if (scrollTop > 48) {
+        newHeight -= 48;
+      } else {
+        newHeight -= scrollTop;
+      }
+      return newHeight + "px";
+    },
+    tabBarFontSize: function tabBarFontSize() {
+      var newSize = 36;
+      var scrollTop = this.scrollTop.old || 0;
+      if (scrollTop > 48) {
+        newSize -= 16;
+      } else {
+        newSize -= Math.floor(scrollTop / 3);
+      }
+      return newSize + "px";
+    },
+    isShowTabBarLine: function isShowTabBarLine() {
+      var scrollTop = this.scrollTop.old || 0;
+      if (scrollTop > 48) {
+        return true;
+      }
+      return false;
+    },
+    tabContentHeight: function tabContentHeight() {
+      var newHeight = 100;
+      var scrollTop = this.scrollTop.old || 0;
+      if (scrollTop > 48) {
+        newHeight -= 48;
+      } else {
+        newHeight -= scrollTop;
+      }
+      return "calc(100% - " + newHeight + "px)";
+    },
+    searchInputWidth: function searchInputWidth() {
+      var newWidth = 280;
+      var scrollTop = this.scrollTop.old || 0;
+      if (scrollTop > 96) {
+        newWidth -= 192;
+      } else {
+        newWidth -= 2 * scrollTop;
+      }
+      return newWidth + "px";
+    } },
+
   onLoad: function onLoad() {
-
+    this.loadTabData(null);
   },
-  methods: {} };exports.default = _default;
+  methods: {
+    // 点击搜索按钮
+    onSearch: function onSearch(e) {
+
+    },
+    // 滚动tab内容
+    onScroll: function onScroll(e) {
+      this.scrollTop.old = e.target.scrollTop || e.detail.scrollTop;
+    },
+    onGoTop: function onGoTop(e) {var _this = this;
+      this.scrollTop.count++;
+      setTimeout(function () {
+        if (_this.scrollTop.count > 1) {
+          _this.scrollTop.current = _this.scrollTop.old;
+          _this.$nextTick(function () {
+            this.scrollTop.current = 0;
+          });
+        }
+        _this.scrollTop.count = 0;
+      }, 300);
+    },
+    // 加载tab数据
+    loadTabData: function loadTabData(callback) {var _this2 = this;
+      // 标记正在加载
+      this.isLoading = true;
+      this.loadingText = "正在加载...";
+      // 请求数据
+      setTimeout(function () {
+        for (var i = 0; i < 10; i++) {
+          _this2.items.push({
+            pic: "/static/img/logo.png",
+            count: i * 9,
+            name: "名称",
+            time: "昨天",
+            info: "对【工具名称什么的龙科恐龙丹佛的时刻v迫使对方的经费管理的方式对付苏联当局封锁的法律思考的客服就是每次v但是v了士大夫士大夫方式】进行了收藏" });
+
+        }
+        // 标记加载完成
+        _this2.isLoading = false;
+        _this2.loadingText = "加载更多...";
+        if (callback != null) {
+          callback();
+        }
+      }, 500);
+    },
+    // 加载更多
+    loadMore: function loadMore(e) {
+      this.loadTabData(null);
+    },
+    // 刷新tab数据
+    refreshTabData: function refreshTabData(callback) {var _this3 = this;
+      // 标记正在刷新
+      this.isRefreshing = true;
+      this.refreshText = "正在刷新...";
+      // 请求数据
+      setTimeout(function () {
+        for (var i = 10; i > 0; i--) {
+          _this3.items.unshift({
+            pic: "/static/img/logo.png",
+            count: 1,
+            name: "名称",
+            time: "昨天",
+            info: "对【工具名称什么的龙科恐龙丹佛的时刻v迫使对方的经费管理的方式对付苏联当局封锁的法律思考的方式】进行了收藏" });
+
+        }
+        // 标记完成刷新
+        _this3.isRefreshing = false;
+        _this3.refreshText = "已刷新";
+        if (callback != null) {
+          callback();
+        }
+      }, 1000);
+    },
+    // 刷新tab
+    onRefresh: function onRefresh(e) {
+      if (!this.refreshFlag) {
+        return;
+      }
+      // 刷新tab数据
+      this.refreshTabData(function () {var _this4 = this;
+        this.isPulling = true;
+        this.refreshFlag = false;
+        setTimeout(function () {// Fix ios和Android 动画时间相反问题
+          _this4.isPulling = false;
+        }, 500);
+      });
+    },
+    onPullingDown: function onPullingDown(e) {
+      if (this.isRefreshing || this.isPulling) {
+        return;
+      }
+      if (Math.abs(e.pullingDistance) > Math.abs(e.viewHeight)) {
+        this.refreshFlag = true;
+        this.refreshText = "释放立即刷新";
+      } else {
+        this.refreshFlag = false;
+        this.refreshText = "下拉可以刷新";
+      }
+    },
+    showDetail: function showDetail(e) {
+
+    } } };exports.default = _default;
 
 /***/ }),
 

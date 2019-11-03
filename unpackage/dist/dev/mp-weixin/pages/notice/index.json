@@ -1,4 +1,7 @@
 {
   "navigationStyle": "custom",
-  "usingComponents": {}
+  "usingComponents": {
+    "uni-icons": "/components/uni-icons",
+    "notice-item": "/components/notice-item"
+  }
 }

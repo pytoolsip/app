@@ -104,11 +104,11 @@
 /******/
 /******/
 /******/ 		// mini-css-extract-plugin CSS loading
-/******/ 		var cssChunks = {"components/follow-item":1,"components/media-item":1,"components/uni-icons":1};
+/******/ 		var cssChunks = {"components/follow-item":1,"components/media-item":1,"components/uni-icons":1,"components/notice-item":1,"components/uni-badge":1};
 /******/ 		if(installedCssChunks[chunkId]) promises.push(installedCssChunks[chunkId]);
 /******/ 		else if(installedCssChunks[chunkId] !== 0 && cssChunks[chunkId]) {
 /******/ 			promises.push(installedCssChunks[chunkId] = new Promise(function(resolve, reject) {
-/******/ 				var href = "" + ({"components/follow-item":"components/follow-item","components/media-item":"components/media-item","components/uni-icons":"components/uni-icons"}[chunkId]||chunkId) + ".wxss";
+/******/ 				var href = "" + ({"components/follow-item":"components/follow-item","components/media-item":"components/media-item","components/uni-icons":"components/uni-icons","components/notice-item":"components/notice-item","components/uni-badge":"components/uni-badge"}[chunkId]||chunkId) + ".wxss";
 /******/ 				var fullhref = __webpack_require__.p + href;
 /******/ 				var existingLinkTags = document.getElementsByTagName("link");
 /******/ 				for(var i = 0; i < existingLinkTags.length; i++) {
