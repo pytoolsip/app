@@ -51,6 +51,10 @@
 				"app-plus":{"titleNView":false}
 			}
 		}
+        ,{
+            "path" : "pages/notice/news-item/news-item",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"backgroundColor": "#FFFFFF"

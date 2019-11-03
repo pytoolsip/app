@@ -1,5 +1,5 @@
 <template>
-	<view class="item item-space-between">
+	<view class="item item-space-between" @click="click">
 		<view class="item-icon">
 			<image class="item-icon-image" v-if="options.pic" :src="options.pic" />
 			<uni-badge class="item-icon-badge" v-if="options.count && options.count > 0" :text="options.count" type="error" size="small" />
@@ -29,6 +29,11 @@
 					return {}
 				}
 			}
+		},
+		methods: {
+			click() {
+				this.$emit('click');
+			},
 		}
 	}
 </script>
