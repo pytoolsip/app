@@ -6,10 +6,18 @@
 		</view>
 		<view class="item-body flex-col">
 			<view class="item-space-between">
-				<text class="item-name" v-if="options.name">{{options.name}}</text>
+				<view class="item-title-text">
+					<text class="item-title" v-if="options.title">{{options.title}}</text>
+					<text class="item-sub-title" v-if="options.subTitle">[{{options.subTitle}}]</text>
+				</view>
 				<text class="item-newest-time" v-if="options.time">{{options.time}}</text>
 			</view>
 			<view class="item-body-content">
+				<view class="info-user flex-row">
+					<image class="info-user-image" v-if="options.user_pic" :src="options.user_pic"></image>
+					<text class="info-user-name" v-if="options.user">{{options.user}}</text>
+					<text class="info-op-info" v-if="options.op_info">{{options.op_info}}</text>
+				</view>
 				<text class="item-info" v-if="options.info">{{options.info}}</text>
 			</view>
 		</view>
@@ -68,9 +76,9 @@
 	}
 	
 	.item-icon-image {
-		margin-top: 6px;
-		width: 50px;
-		height: 50px;
+		margin-top: 8px;
+		width: 60px;
+		height: 45px;
 		border: 1px #E1E1E1 solid;
 		border-radius: 4px;
 	}
@@ -78,15 +86,29 @@
 	.item-icon-badge {
 		position: absolute;
 		top: -4px;
-		left: 36px;
+		left: 44px;
 	}
 	
 	.item-body {
-		width: calc(100% - 60px);
+		width: calc(100% - 70px);
 	}
 	
-	.item-name {
+	.item-title-text {
+		width: calc(100% - 30px);
+		display: -webkit-box;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+	}
+	
+	.item-title {
 		font-weight: bold;
+	}
+	
+	.item-sub-title {
+		margin-left: 2px;
+		font-size: 12px;
 	}
 	
 	.item-newest-time {
@@ -95,18 +117,40 @@
 	}
 	
 	.item-body-content {
-	}
-	
-	.item-info {
 		width: 100%;
 		height: 30px;
 		font-size: 12px;
+	}
+	
+	.info-user {
+		margin-top: 2px;
+	}
+	
+	.info-user-image {
+		margin-top: 1px;
+		width: 12px;
+		height: 12px;
+		border: 1px #E1E1E1 solid;
+		border-radius: 50%;
+	}
+	
+	.info-user-name {
+		margin-left: 1px;
+		color: #686868;
+		font-weight: bold;
+	}
+	
+	.info-op-info {
+		margin-left: 4px;
+		color: #727272;
+	}
+	
+	.item-info {
 		color: #989898;
-		padding: 2px;
 		display: -webkit-box;
 		overflow: hidden;
 		text-overflow: ellipsis;
-		-webkit-line-clamp: 2;
+		-webkit-line-clamp: 1;
 		-webkit-box-orient: vertical;
 	}
 

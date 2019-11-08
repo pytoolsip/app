@@ -1,9 +1,9 @@
 <template>
 	<view class="media-item" hover-class="media-item-hover" v-if="options.title" @click="click">
 		<view class="media-header">
-			<text>{{options.title}}</text>
-			<view class="media-header-subtitle" v-if="options.subTitle">
-				<text>[{{options.subTitle}}]</text>
+			<text class="media-header-title">{{options.title}}</text>
+			<view class="flex-row" v-if="options.subTitle">
+				[<text class="media-header-subtitle">{{options.subTitle}}</text>]
 			</view>
 		</view>
 		<view class="media-body media-space-between">
@@ -76,11 +76,24 @@
 		color: #333333;
 		font-size: 16px;
 		line-height: 24px;
+	}
+	
+	.media-header-title{
 		font-weight: bold;
+		display: -webkit-box;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
 	}
 	
 	.media-header-subtitle {
-		font-weight: normal;
+		font-size: 14px;
+		display: -webkit-box;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		-webkit-line-clamp: 1;
+		-webkit-box-orient: vertical;
 	}
 	
 	.media-body {

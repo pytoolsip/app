@@ -122,7 +122,7 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var uniIcons = function uniIcons() {return __webpack_require__.e(/*! import() | components/uni-icons */ "components/uni-icons").then(__webpack_require__.bind(null, /*! ../../components/uni-icons.vue */ 47));};var noticeItem = function noticeItem() {return __webpack_require__.e(/*! import() | components/notice-item */ "components/notice-item").then(__webpack_require__.bind(null, /*! ../../components/notice-item.vue */ 68));};var _default =
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var uniIcons = function uniIcons() {return __webpack_require__.e(/*! import() | components/uni-icons */ "components/uni-icons").then(__webpack_require__.bind(null, /*! ../../components/uni-icons.vue */ 53));};var noticeItem = function noticeItem() {return __webpack_require__.e(/*! import() | components/notice-item */ "components/notice-item").then(__webpack_require__.bind(null, /*! ../../components/notice-item.vue */ 74));};var _default =
 
 
 
@@ -276,9 +276,13 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
           _this2.items.push({
             pic: "/static/img/logo.png",
             count: i * 9,
-            name: "名称",
-            time: "昨天",
-            info: "对【工具名称什么的龙科恐龙丹佛的时刻v迫使对方的经费管理的方式对付苏联当局封锁的法律思考的客服就是每次v但是v了士大夫士大夫方式】进行了收藏" });
+            title: "工具/文章名称巴拉的房间你开始了foes的吗v的的访客数量大幅减少的风景对我邓肯开发商的浪费空间是付款的说法就是老大",
+            subTitle: "子标题",
+            time: "11-11",
+            user_pic: "/static/img/logo.png",
+            user: "用户",
+            op_info: "进行了评论",
+            info: "扩大范围偶尔玩反贫困打破v对方的发士大夫类似的方式普热贴的环境成本多少v本科生的奶粉事件颠覆国家独立空间反过来看的法国空客国家" });
 
         }
         // 标记加载完成
