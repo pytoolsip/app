@@ -224,7 +224,9 @@
 				}
 			},
 			showDetail(e) {
-				
+				uni.navigateTo({
+					url: "./notice_detail/notice_detail?title=" + e.title + "&thumbnail=" + e.pic,
+				});
 			},
 		}
 	}

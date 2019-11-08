@@ -4,11 +4,13 @@
     "pages/tool/index",
     "pages/notice/index",
     "pages/mine/index",
-    "pages/notice/news-item/news-item"
+    "pages/notice/notice_detail/notice_detail"
   ],
   "subPackages": [],
   "window": {
-    "backgroundColor": "#FFFFFF"
+    "backgroundColor": "#FFFFFF",
+    "navigationBarTextStyle": "black",
+    "navigationBarBackgroundColor": "#FAFAFA"
   },
   "tabBar": {
     "borderStyle": "black",
@@ -42,6 +44,5 @@
       }
     ]
   },
-  "usingComponents": {},
-  "sitemapLocation": "sitemap47.json"
+  "usingComponents": {}
 }

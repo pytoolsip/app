@@ -1,10 +1,14 @@
 <template>
 	<view class="item" @click="click">
 		<view class="header">
+			<view class="header-sys" v-if="options.sys">系统通知</view>
+			<view class="header-user" v-if="options.user">
+				<image class="user-image" v-if="options.user_pic" :src="options.user_pic"></image>
+				<text class="user-name" v-if="options.user">{{options.user}}</text>
+			</view>
 			<view class="header-time" v-if="options.time">{{options.time}}</view>
 		</view>
 		<view class="body">
-			<view class="body-target" v-if="options.target">{{options.target}}</view>
 			<view class="body-pre-content" v-if="options.preContent">{{options.preContent}}</view>
 			<view class="body-content" v-if="options.content">{{options.content}}</view>
 			<view class="body-ext-content" v-if="options.extContent">{{options.extContent}}</view>

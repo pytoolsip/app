@@ -1,0 +1,1 @@
+<view><block wx:if="{{options.thumbnail}}"><image src="{{options.thumbnail}}"></image></block></view>

@@ -122,7 +122,7 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var uniIcons = function uniIcons() {return __webpack_require__.e(/*! import() | components/uni-icons */ "components/uni-icons").then(__webpack_require__.bind(null, /*! ../../components/uni-icons.vue */ 53));};var noticeItem = function noticeItem() {return __webpack_require__.e(/*! import() | components/notice-item */ "components/notice-item").then(__webpack_require__.bind(null, /*! ../../components/notice-item.vue */ 74));};var _default =
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var uniIcons = function uniIcons() {return __webpack_require__.e(/*! import() | components/uni-icons */ "components/uni-icons").then(__webpack_require__.bind(null, /*! ../../components/uni-icons.vue */ 53));};var noticeItem = function noticeItem() {return __webpack_require__.e(/*! import() | components/notice-item */ "components/notice-item").then(__webpack_require__.bind(null, /*! ../../components/notice-item.vue */ 74));};var _default =
 
 
 
@@ -348,8 +348,11 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
       }
     },
     showDetail: function showDetail(e) {
+      uni.navigateTo({
+        url: "./notice_detail/notice_detail?title=" + e.title + "&thumbnail=" + e.pic });
 
     } } };exports.default = _default;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 
 /***/ }),
 

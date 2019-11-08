@@ -52,12 +52,21 @@
 			}
 		}
         ,{
-            "path" : "pages/notice/news-item/news-item",
-            "style" : {}
+            "path" : "pages/notice/notice_detail/notice_detail",
+            "style" : {
+				"navigationBarTitleText": "",
+				"app-plus":{
+					"titleNView": {
+						"type": "transparent"
+					}
+				}
+			}
         }
     ],
 	"globalStyle": {
-		"backgroundColor": "#FFFFFF"
+		"backgroundColor": "#FFFFFF",
+		"navigationBarTextStyle": "black",
+		"navigationBarBackgroundColor": "#FAFAFA"
 	},
 	"tabBar": {
 		"borderStyle": "black",
