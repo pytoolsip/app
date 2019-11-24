@@ -733,7 +733,7 @@ function initData(vueOptions, context) {
     try {
       data = data.call(context); // 支持 Vue.prototype 上挂的数据
     } catch (e) {
-      if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
+      if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
         console.warn('根据 Vue 的 data 函数初始化小程序 data 失败，请尽量确保 data 函数中不访问 vm 对象，否则可能影响首次数据渲染速度。', data);
       }
     }
@@ -6978,7 +6978,7 @@ function type(obj) {
 
 function flushCallbacks$1(vm) {
     if (vm.__next_tick_callbacks && vm.__next_tick_callbacks.length) {
-        if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
+        if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
             var mpInstance = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + vm._uid +
                 ']:flushCallbacks[' + vm.__next_tick_callbacks.length + ']');
@@ -6999,14 +6999,14 @@ function nextTick$1(vm, cb) {
     //1.nextTick 之前 已 setData 且 setData 还未回调完成
     //2.nextTick 之前存在 render watcher
     if (!vm.__next_tick_pending && !hasRenderWatcher(vm)) {
-        if(Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG){
+        if(Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG){
             var mpInstance = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + vm._uid +
                 ']:nextVueTick');
         }
         return nextTick(cb, vm)
     }else{
-        if(Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG){
+        if(Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG){
             var mpInstance$1 = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance$1.is || mpInstance$1.route) + '][' + vm._uid +
                 ']:nextMPTick');
@@ -7082,7 +7082,7 @@ var patch = function(oldVnode, vnode) {
     });
     var diffData = diff(data, mpData);
     if (Object.keys(diffData).length) {
-      if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
+      if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
         console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + this._uid +
           ']差量更新',
           JSON.stringify(diffData));
@@ -8403,7 +8403,7 @@ module.exports = {"_from":"@dcloudio/uni-stat@next","_id":"@dcloudio/uni-stat@2.
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/home/index": { "navigationStyle": "custom", "usingComponents": { "uni-icons": "/components/uni-icons", "media-item": "/components/media-item", "follow-item": "/components/follow-item" } }, "pages/tool/index": { "navigationStyle": "custom", "usingComponents": { "uni-icons": "/components/uni-icons", "media-item": "/components/media-item" } }, "pages/notice/index": { "navigationStyle": "custom", "usingComponents": { "uni-icons": "/components/uni-icons", "notice-item": "/components/notice-item" } }, "pages/mine/index": { "navigationStyle": "custom", "usingComponents": { "uni-icons": "/components/uni-icons" } }, "pages/notice/notice_detail/notice_detail": { "navigationBarTitleText": "", "usingComponents": {} } }, "globalStyle": { "backgroundColor": "#FFFFFF", "navigationBarTextStyle": "black", "navigationBarBackgroundColor": "#FAFAFA" } };exports.default = _default;
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/home/index": { "navigationStyle": "custom" }, "pages/tool/index": { "navigationStyle": "custom" }, "pages/notice/index": { "navigationStyle": "custom" }, "pages/mine/index": { "navigationStyle": "custom" }, "pages/notice/notice_detail/notice_detail": { "navigationBarTitleText": "" } }, "globalStyle": { "backgroundColor": "#FFFFFF", "navigationBarTextStyle": "black", "navigationBarBackgroundColor": "#FAFAFA" } };exports.default = _default;
 
 /***/ }),
 /* 8 */
@@ -8420,9 +8420,149 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
 /* 9 */,
 /* 10 */,
 /* 11 */,
-/* 12 */,
+/* 12 */
+/*!************************************************!*\
+  !*** E:/project/pytoolsip/app/static/js/ws.js ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.BaseWS = void 0; // 基础WebSocket
+var BaseWS = function BaseWS(name, url) {var ctx = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+  this._baseName = name;
+  this._ws = null;
+  this._url = url;
+  this._ctx = ctx; // 上下文内容
+  this._listeners = {}; // 消息监听表
+  this._listenerIndex = 0; // 消息监听下标
+  this.init();
+};exports.BaseWS = BaseWS;
+BaseWS.prototype.newListenerIndex = function () {
+  this._listenerIndex++;
+  return this._listenerIndex;
+};
+BaseWS.prototype.getBaseName = function () {var suffix = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : "";
+  return this._baseName + suffix;
+};
+BaseWS.prototype.init = function () {
+  // 初始化webSocket
+  var self = this;
+  // 初始化websocket
+  self.initWS();
+  // 注册基本事件
+  self.register("WS_onUpdateCtx", function (status, data) {
+    for (var key in data) {
+      self._ctx[key] = data[key];
+    }
+  });
+  self.register("WS_onError", function (status, data) {
+    console.error(data);
+  });
+};
+BaseWS.prototype.initWS = function () {
+  // 初始化webSocket
+  var self = this;
+  self._ws = uni.connectSocket({
+    url: this._url,
+    complete: function complete() {} });
+
+  self._ws.onOpen(function () {
+    if (self.hasOwnProperty("onOpen")) {
+      self.onOpen(self);
+    }
+  });
+  self._ws.onClose(function () {
+    if (self.hasOwnProperty("onClose")) {
+      self.onClose(self);
+    }
+  });
+  self._ws.onMessage(function (e) {
+    var data = JSON.parse(e.data);
+    if (data.hasOwnProperty("resp") && data.hasOwnProperty("status") && data.hasOwnProperty("msg")) {
+      var respName = data["resp"];
+      if (self._listeners.hasOwnProperty(respName)) {
+        for (fid in self._listeners[respName]) {
+          self._listeners[respName][fid](data["status"], data["msg"]);
+        }
+      }
+    }
+  });
+};
+BaseWS.prototype.isvalid = function () {
+  return this._ws != null;
+};
+BaseWS.prototype.isclose = function () {
+  if (!this.isvalid()) {
+    return false;
+  }
+  return this._ws.readyState == this._ws.CLOSING || this._ws.readyState == this._ws.CLOSED;
+};
+BaseWS.prototype.isopen = function () {
+  if (!this.isvalid()) {
+    return false;
+  }
+  return this._ws.readyState == this._ws.OPEN;
+};
+BaseWS.prototype.close = function () {
+  if (this.isopen()) {
+    this._ws.close();
+    return;
+  }
+};
+BaseWS.prototype.active = function () {
+  if (this.isclose()) {
+    this.initWS();
+  }
+};
+BaseWS.prototype.request = function (reqFuncName, msg, respFuncName) {
+  var self = this;
+  if (!self.isopen()) {
+    console.log("request failed!");
+    return;
+  }
+  // 发送消息
+  self._ws.send({
+    "data": JSON.stringify({
+      "req": reqFuncName,
+      "ctx": self._ctx,
+      "msg": msg,
+      "resp": respFuncName }) });
+
+
+};
+BaseWS.prototype.register = function (name, func) {
+  var self = this;
+  if (!self._listeners.hasOwnProperty(name)) {
+    self._listeners[name] = {};
+  }
+  self._listeners[name][self.newListenerIndex()] = func;
+};
+BaseWS.prototype.unregister = function (name, fid) {
+  var self = this;
+  if (!self._listeners.hasOwnProperty(name)) {
+    return false;
+  }
+  // 移除对应名称的监听表
+  if (fid < 0) {
+    delete self._listeners[name];
+    return true;
+  }
+  // 移除指定函数
+  if (self._listeners[name].hasOwnProperty(fid)) {
+    delete self._listeners[name][fid];
+    return true;
+  }
+  return false;
+};
+
+// 导出变量
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
+
+/***/ }),
 /* 13 */,
-/* 14 */
+/* 14 */,
+/* 15 */
 /*!********************************************************************!*\
   !*** ./node_modules/vue-loader/lib/runtime/componentNormalizer.js ***!
   \********************************************************************/
