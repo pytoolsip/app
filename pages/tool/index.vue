@@ -86,6 +86,7 @@
 				dataLenLimit: 8, // 显示加载提示的数据长度限制
 				category: {
 					list: ["所有工具", "开发工具", "产品工具", "娱乐工具"],
+					keys: ["all", "develop", "product", "entertainment"],
 					index: 0,
 				},
 			}
@@ -118,7 +119,8 @@
 				this.dataList.push({
 					items: [],
 					isLoading: false,
-					loadingText: "已经到最底了~",
+					loadingText: "加载更多...",
+					isInTheEnd: false,
 					isPulling: false,
 					refreshFlag: false,
 					isRefreshing: false,
@@ -130,7 +132,7 @@
 						current: 0,
 					},
 				});
-			})
+			});
 			// 切换Tab
 			this.switchTab(START_TAB_INDEX);
 		},
@@ -162,41 +164,44 @@
 				}, 300);
 			},
 			// 加载tab数据
-			loadTabData(index, callback) {
+			loadTabData(index) {
 				let activeData = this.dataList[index];
+				if (activeData.isInTheEnd) {
+					return;
+				}
 				// 标记正在加载
 				activeData.isLoading = true;
 				activeData.loadingText = "正在加载...";
+				// 获取请求参数
+				var startId = -1;
+				if (activeData.items.length > 0) {
+					startId = activeData.items[activeData.items.length - 1].id;
+				}
 				// 请求数据
-				setTimeout(() => {
-					for (let i = 0; i < 4; i++) {
-						activeData.items.push({
-							title: "的时间发射犯得上发生的故事的方法点发射偶尔来点开发了什么v付款DVD浪费了的是地理开发吉林省地方就是立刻解放点发嘀咕咖啡馆颠覆国家工具" + activeData.items.length,
-							subTitle: "子标题发价格好商量的女生罗迪克在哪里发货速度的快捷方式康师傅的肌肤国家的恢复了更好的分类结果换来的",
-							type: "工具",
-							description: "测试工具。。。。。。混沌复合时空的合法代表VS的的方式打开方式决定恢复乐山大佛乐山大佛快递费是v的封建士大夫受到核辐射的花费的时间很少看粉红色的吧对方就会收到客户发生的核辐射看",
-							thumbnail: "/static/img/logo.png",
-							author_pic: "/static/img/logo.png",
-							author: "作者",
-							time: "2019-10-26",
-							countLabel: "阅读量",
-							count: 0,
-							collection: "未收藏",
-						});
+				getApp().globalData.AppSocket.request("ReqTools", {
+					startId: startId,
+					category: this.category.keys[this.category.index],
+				}, function(status, data){
+					if (status == "success") {
+						for (let i = 0; i < data.items.length; i++) {
+							activeData.items.push(data[i]);
+						}
+						// 标记加载完成
+						activeData.isLoading = false;
+						if (data.isInTheEnd) {
+							activeData.isInTheEnd = true;
+							activeData.loadingText = "已经到最底了~";
+						} else {
+							activeData.loadingText = "加载更多...";
+						}
 					}
-					// 标记加载完成
-					activeData.isLoading = false;
-					activeData.loadingText = "加载更多...";
-					if (callback != null) {
-						callback();
-					}
-				}, 500);
+				});
 			},
 			// 切换tab
 			switchTab(index) {
 				// 判断将要切换的tab是否有数据，没有的话，先请求数据
 				if (this.dataList[index].items.length === 0) {
-					this.loadTabData(index, null);
+					this.loadTabData(index);
 				}
 				// 判断要切换的tab是否为当前tab
 				if (this.tabIdx === index) {
@@ -220,33 +225,39 @@
 			},
 			// 加载更多
 			loadMore(e) {
-				this.loadTabData(this.tabIdx, null);
+				this.loadTabData(this.tabIdx);
 			},
 			// 刷新tab数据
-			refreshTabData(callback) {
-				let activeData = this.dataList[this.tabIdx];
+			refreshTabData(index) {
+				let activeData = this.dataList[index];
 				// 标记正在刷新
 				activeData.isRefreshing = true;
 				activeData.refreshText = "正在刷新...";
+				// 获取请求参数
+				var endId = -1;
+				if (activeData.items.length > 0) {
+					endId = activeData.items[activeData.items.length - 1].id;
+				}
 				// 请求数据
-				setTimeout(() => {
-					for (let i = 10; i > 0; i--) {
-						activeData.items.unshift({
-							title: "工具-" + i,
-							type: "工具",
-							thumbnail: "/static/img/logo.png",
-							author: "作者",
-							time: "2019-10-26",
-							count: 0,
-						});
+				getApp().globalData.AppSocket.request("ReqTools", {
+					endId: endId,
+					category: this.category.keys[this.category.index],
+				}, function(status, data){
+					if (status == "success") {
+						for (let i = data.items.length - 1; i >= 0; i--) {
+							activeData.items.unshift(data[i]);
+						}
+						// 标记完成刷新
+						activeData.isRefreshing = false;
+						activeData.refreshText = "已刷新";
+						// 重置拉取状态
+						activeData.isPulling = true;
+						activeData.refreshFlag = false;
+						setTimeout(() => { // Fix ios和Android 动画时间相反问题
+							activeData.isPulling = false;
+						}, 500);
 					}
-					// 标记完成刷新
-					activeData.isRefreshing = false;
-					activeData.refreshText = "已刷新";
-					if (callback != null) {
-						callback();
-					}
-				}, 1000);
+				});
 			},
 			// 刷新tab
 			onRefresh(e) {
@@ -255,13 +266,7 @@
 					return;
 				}
 				// 刷新tab数据
-				this.refreshTabData(function() {
-					activeData.isPulling = true;
-					activeData.refreshFlag = false;
-					setTimeout(() => { // Fix ios和Android 动画时间相反问题
-						activeData.isPulling = false;
-					}, 500);
-				});
+				this.refreshTabData(this.tabIdx);
 			},
 			onPullingDown(e) {
 				let activeData = this.dataList[this.tabIdx];

@@ -6,11 +6,18 @@ var BaseWS = function(name, url, ctx = {}) {
     this._ctx = ctx; // 上下文内容
     this._listeners = {}; // 消息监听表
     this._listenerIndex = 0; // 消息监听下标
+    this._activeInterval = null; // 定时监测socket状态的定时器ID
+    this._respCallbackMap = {}; // 请求回调函数表
+    this._respCallbackIndex = 0; // 请求回调下标
     this.init();
 };
 BaseWS.prototype.newListenerIndex = function() {
     this._listenerIndex ++;
     return this._listenerIndex;
+};
+BaseWS.prototype.newRespCallbackIndex = function() {
+    this._respCallbackIndex = this._respCallbackIndex % 10000 + 1;
+    return this._respCallbackIndex;
 };
 BaseWS.prototype.getBaseName = function(suffix = "") {
     return this._baseName + suffix;
@@ -51,6 +58,12 @@ BaseWS.prototype.initWS = function() {
         var data = JSON.parse(e.data);
         if (data.hasOwnProperty("resp") && data.hasOwnProperty("status") && data.hasOwnProperty("msg")) {
             var respName = data["resp"];
+            // 检测请求回调
+            if (self._respCallbackMap.hasOwnProperty(respName)) {
+                self._respCallbackMap[respName](data["status"], data["msg"]);
+                delete self._respCallbackMap[respName]; // 回调后，移除相应函数
+            }
+            // 检测监听回调
             if (self._listeners.hasOwnProperty(respName)) {
                 for (fid in self._listeners[respName]) {
                     self._listeners[respName][fid](data["status"], data["msg"]);
@@ -85,11 +98,31 @@ BaseWS.prototype.active = function() {
 		this.initWS();
 	}
 };
-BaseWS.prototype.request = function(reqFuncName, msg, respFuncName) {
+BaseWS.prototype.activeLoop = function(duration) {
+    var self = this;
+    self.stopActiveLoop();
+	self._activeInterval = setInterval(function(){
+        self.active();
+    }, duration);
+};
+BaseWS.prototype.stopActiveLoop = function() {
+    var self = this;
+    if (self._activeInterval != null) {
+        clearInterval(self._activeInterval);
+        self._activeInterval = null;
+    }
+};
+BaseWS.prototype.request = function(reqFuncName, msg, respFunc = null) {
     var self = this;
     if (!self.isopen()) {
         console.log("request failed!");
         return
+    }
+    // 缓存回调函数，在onmessage中进行处理
+    var respFuncName = "";
+    if (typeof respFunc == "function") {
+        respFuncName = String(self.newRespCallbackIndex());
+        self._respCallbackMap[respFuncName] = respFunc;
     }
     // 发送消息
     self._ws.send({
@@ -106,22 +139,18 @@ BaseWS.prototype.register = function(name, func) {
     if (!self._listeners.hasOwnProperty(name)) {
         self._listeners[name] = {};
     }
-    self._listeners[name][self.newListenerIndex()] = func;
+    var idx = self.newListenerIndex();
+    self._listeners[name][idx] = func;
+    return idx;
 };
-BaseWS.prototype.unregister = function(name, fid) {
+BaseWS.prototype.unregister = function(listenerId) {
     var self = this;
-    if (!self._listeners.hasOwnProperty(name)) {
-        return false;
-    }
-    // 移除对应名称的监听表
-    if (fid < 0) {
-        delete self._listeners[name];
-        return true;
-    }
-    // 移除指定函数
-    if (self._listeners[name].hasOwnProperty(fid)) {
-        delete self._listeners[name][fid];
-        return true;
+    for(var name in self._listeners) {
+        // 移除指定函数
+        if (self._listeners[name].hasOwnProperty(listenerId)) {
+            delete self._listeners[name][listenerId];
+            return true;
+        }
     }
     return false;
 };

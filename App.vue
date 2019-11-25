@@ -7,7 +7,7 @@
 		});
 		// 请求登陆ID
 		ws.onOpen = function() {
-			ws.request("Login", {}, "RespLogin");
+			ws.request("ReqAppID", {});
 		}
 		// 关闭socket
 		ws.onClose = function() {
@@ -18,6 +18,11 @@
 			var idKey = ws.getBaseName("id");
 			if (idKey in data) {
 				uni.setStorageSync(idKey, data[idKey]);
+			}
+			// 保存公钥
+			var publicKey = ws.getBaseName("public_key");
+			if (publicKey in data) {
+				uni.setStorageSync(publicKey, data[publicKey]);
 			}
 			// 保存token
 			var tokenKey = ws.getBaseName("token");
@@ -44,23 +49,28 @@
 		});
 		return ws;
 	};
-	var _APP_SOCKET = null;
-	var _APP_SOCKET_INTERVAL = -1;
+	// 定时器ID
 	export default {
+		globalData: {
+			AppSocket: null,
+		},
 		onLaunch: function() {
-			console.log("App onLaunch");
-			_APP_SOCKET = createAppWS();
+			console.log("App onLaunch.");
+			getApp().globalData.AppSocket = createAppWS(); // 创建WebSocket
 		},
 		onShow: function() {
-			console.log("App onShow");
-			_APP_SOCKET_INTERVAL = setInterval(function(){
-				_APP_SOCKET.active();
-			}, 60000); // 每隔60秒校验WebSocket
+			console.log("App onShow.");
+			getApp().globalData.AppSocket.activeLoop(60000); // 每隔60秒校验WebSocket
 		},
 		onHide: function() {
-			console.log("App onHide");
-			clearInterval(_APP_SOCKET_INTERVAL);
-		}
+			console.log("App onHide.");
+			getApp().globalData.AppSocket.stopActiveLoop(); // 停止校验WebSocket的定时器
+		},
+		onUnload: function() {
+			console.log("App onUnload.");
+			getApp().globalData.AppSocket.close(); // 关闭WebSocket
+			getApp().globalData.AppSocket = null;
+		},
 	}
 </script>
 
