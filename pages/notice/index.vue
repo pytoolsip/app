@@ -19,7 +19,7 @@
 						<text class="loading-text">{{refreshText}}</text>
 					</div>
 				</refresh>
-				<cell v-for="(item,idx1) in items" :key="item.id">
+				<cell v-for="item in items" :key="item.id">
 					<notice-item :options="item" @click="showDetail(item)"></notice-item>
 				</cell>
 				<cell class="loading-more" v-if="isLoading || items.length > dataLenLimit">
@@ -29,7 +29,7 @@
 			<!-- #endif -->
 			<!-- #ifndef APP-NVUE -->
 			<scroll-view class="scroll-v" enableBackToTop="true" scroll-y @scrolltolower="loadMore" @scroll="onScroll" :scroll-top="scrollTop.current" scroll-with-animation="true">
-				<view v-for="(item,idx1) in items" :key="item.id">
+				<view v-for="item in items" :key="item.id">
 					<notice-item :options="item" @click="showDetail(item)"></notice-item>
 				</view>
 				<view class="loading-more" v-if="isLoading || length > dataLenLimit">
@@ -55,7 +55,8 @@
 			return {
 				items: [],
 				isLoading: false,
-				loadingText: "已经到最底了~",
+				loadingText: "加载更多...",
+				isInTheEnd: false,
 				isPulling: false,
 				refreshFlag: false,
 				isRefreshing: false,
@@ -118,7 +119,7 @@
 			}
 		},
 		onLoad() {
-			this.loadTabData(null);
+			this.loadTabData();
 		},
 		methods: {
 			// 点击搜索按钮
@@ -142,60 +143,73 @@
 				}, 300);
 			},
 			// 加载tab数据
-			loadTabData(callback) {
+			loadTabData() {
+				if (this.isInTheEnd || this.isLoading) {
+					return;
+				}
 				// 标记正在加载
 				this.isLoading = true;
 				this.loadingText = "正在加载...";
+				// 获取请求参数
+				var startId = -1;
+				if (this.items.length > 0) {
+					startId = this.items[this.items.length - 1].id;
+				}
 				// 请求数据
-				setTimeout(() => {
-					for (let i = 0; i < 10; i++) {
-						this.items.push({
-							pic: "/static/img/logo.png",
-							count: i * 9,
-							title: "工具/文章名称巴拉的房间你开始了foes的吗v的的访客数量大幅减少的风景对我邓肯开发商的浪费空间是付款的说法就是老大",
-							subTitle: "子标题",
-							time: "11-11",
-							user_pic: "/static/img/logo.png",
-							user: "用户",
-							op_info: "进行了评论",
-							info: "扩大范围偶尔玩反贫困打破v对方的发士大夫类似的方式普热贴的环境成本多少v本科生的奶粉事件颠覆国家独立空间反过来看的法国空客国家",
-						});
+				getApp().globalData.AppSocket.request("ReqLatestNotices", {
+					startId: startId,
+				}, function(status, data){
+					if (status == "success") {
+						for (let i = 0; i < data.items.length; i++) {
+							this.items.push(data.items[i]);
+						}
+						// 标记加载完成
+						this.isLoading = false;
+						if (data.isInTheEnd) {
+							this.isInTheEnd = true;
+							this.loadingText = "已经到最底了~";
+						} else {
+							this.loadingText = "加载更多...";
+						}
 					}
-					// 标记加载完成
-					this.isLoading = false;
-					this.loadingText = "加载更多...";
-					if (callback != null) {
-						callback();
-					}
-				}, 500);
+				});
 			},
 			// 加载更多
 			loadMore(e) {
-				this.loadTabData(null);
+				this.loadTabData();
 			},
 			// 刷新tab数据
-			refreshTabData(callback) {
+			refreshTabData() {
+				if (this.isRefreshing) {
+					return;
+				}
 				// 标记正在刷新
 				this.isRefreshing = true;
 				this.refreshText = "正在刷新...";
+				// 获取请求参数
+				var endId = -1;
+				if (this.items.length > 0) {
+					endId = this.items[0].id;
+				}
 				// 请求数据
-				setTimeout(() => {
-					for (let i = 10; i > 0; i--) {
-						this.items.unshift({
-							pic: "/static/img/logo.png",
-							count: 1,
-							name: "名称",
-							time: "昨天",
-							info: "对【工具名称什么的龙科恐龙丹佛的时刻v迫使对方的经费管理的方式对付苏联当局封锁的法律思考的方式】进行了收藏",
-						});
+				getApp().globalData.AppSocket.request("ReqLatestNotices", {
+					endId: endId,
+				}, function(status, data){
+					if (status == "success") {
+						for (let i = data.items.length - 1; i >= 0; i--) {
+							this.items.unshift(data.items[i]);
+						}
+						// 标记完成刷新
+						this.isRefreshing = false;
+						this.refreshText = "已刷新";
+						// 重置拉取状态
+						this.isPulling = true;
+						this.refreshFlag = false;
+						setTimeout(() => { // Fix ios和Android 动画时间相反问题
+							this.isPulling = false;
+						}, 500);
 					}
-					// 标记完成刷新
-					this.isRefreshing = false;
-					this.refreshText = "已刷新";
-					if (callback != null) {
-						callback();
-					}
-				}, 1000);
+				});
 			},
 			// 刷新tab
 			onRefresh(e) {
@@ -203,13 +217,7 @@
 					return;
 				}
 				// 刷新tab数据
-				this.refreshTabData(function() {
-					this.isPulling = true;
-					this.refreshFlag = false;
-					setTimeout(() => { // Fix ios和Android 动画时间相反问题
-						this.isPulling = false;
-					}, 500);
-				});
+				this.refreshTabData();
 			},
 			onPullingDown(e) {
 				if (this.isRefreshing || this.isPulling) {

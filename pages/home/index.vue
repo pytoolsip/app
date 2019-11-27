@@ -22,7 +22,7 @@
 							<text class="loading-text">{{data.refreshText}}</text>
 						</div>
 					</refresh>
-					<cell v-for="(item,idx1) in data.items" :key="item.id">
+					<cell v-for="item in data.items" :key="item.id">
 						<follow-item :options="item" @click="showDetail(item)" :v-if="data.type == 'follow'"></follow-item>
 						<media-item :options="item" @click="showDetail(item)" :v-if="data.type == 'media'"></media-item>
 					</cell>
@@ -33,7 +33,7 @@
 				<!-- #endif -->
 				<!-- #ifndef APP-NVUE -->
 				<scroll-view class="scroll-v" enableBackToTop="true" scroll-y @scrolltolower="loadMore(idx)" @scroll="onScroll" :scroll-top="data.scrollTop.current" scroll-with-animation="true">
-					<view v-for="(item,idx1) in data.items" :key="item.id">
+					<view v-for="item in data.items" :key="item.id">
 						<follow-item :options="item" :v-if="data.type == 'follow'"></follow-item>
 						<media-item :options="item" @click="showDetail(item)" :v-if="data.type == 'media'"></media-item>
 					</view>
@@ -177,14 +177,14 @@
 			// 加载tab数据
 			loadTabData(index) {
 				let activeData = this.dataList[index];
-				if (activeData.isInTheEnd) {
+				if (activeData.isInTheEnd || activeData.isLoading) {
 					return;
 				}
 				// 标记正在加载
 				activeData.isLoading = true;
 				activeData.loadingText = "正在加载...";
 				// 获取请求参数
-				var reqName, startId = "", -1;
+				var reqName = "", startId = -1;
 				if (activeData.items.length > 0) {
 					startId = activeData.items[activeData.items.length - 1].id;
 				}
@@ -199,7 +199,7 @@
 				}, function(status, data){
 					if (status == "success") {
 						for (let i = 0; i < data.items.length; i++) {
-							activeData.items.push(data[i]);
+							activeData.items.push(data.items[i]);
 						}
 						// 标记加载完成
 						activeData.isLoading = false;
@@ -245,13 +245,16 @@
 			// 刷新tab数据
 			refreshTabData(index) {
 				let activeData = this.dataList[index];
+				if (activeData.isRefreshing) {
+					return;
+				}
 				// 标记正在刷新
 				activeData.isRefreshing = true;
 				activeData.refreshText = "正在刷新...";
 				// 获取请求参数
-				var reqName, endId = "", -1;
+				var reqName = "", endId = -1;
 				if (activeData.items.length > 0) {
-					endId = activeData.items[activeData.items.length - 1].id;
+					endId = activeData.items[0].id;
 				}
 				if (activeData.type == "media") {
 					reqName = "ReqAllArticles";
@@ -264,7 +267,7 @@
 				}, function(status, data){
 					if (status == "success") {
 						for (let i = data.items.length - 1; i >= 0; i--) {
-							activeData.items.unshift(data[i]);
+							activeData.items.unshift(data.items[i]);
 						}
 						// 标记完成刷新
 						activeData.isRefreshing = false;

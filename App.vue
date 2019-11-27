@@ -41,12 +41,6 @@
 				uni.$emit("WS_LoginSuccess", data);
 			}
 		});
-		ws.register("RespUserInfo", function(status, data){
-			if (status == "success") {
-				// 处理获取用户信息的消息
-				uni.$emit("WS_GetUserInfo", data);
-			}
-		});
 		return ws;
 	};
 	// 定时器ID
@@ -70,6 +64,9 @@
 			console.log("App onUnload.");
 			getApp().globalData.AppSocket.close(); // 关闭WebSocket
 			getApp().globalData.AppSocket = null;
+			// 保存当前时间戳
+			var now = new Date();
+			uni.setStorageSync("pytoolsip_app_last_time", now.getTime());
 		},
 	}
 </script>

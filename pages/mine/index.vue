@@ -7,10 +7,10 @@
 			</view>
 			<view class="header-info flex-row" @click="showUserInfo">
 				<view class="flex-row">
-					<image class="header-info-image header-info-item" src="../../static/img/logo.png"></image>
+					<image class="header-info-image header-info-item" :src="userInfo.img"></image>
 					<view class="flex-col header-info-item">
-						<text class="header-info-name">梦心DH</text>
-						<text class="header-info-email">jdreamheart@163.com</text>
+						<text class="header-info-name">{{userInfo.name}}</text>
+						<text class="header-info-email">{{userInfo.email}}</text>
 					</view>
 				</view>
 				<uni-icons class="icon-arrowright header-info-item" type="arrowright" color="#FFFFFF" size="22" />
@@ -51,21 +51,82 @@
 		},
 		data() {
 			return {
-				title: 'PyToolsIP'
+				isLogined: false,
+				userInfo: {
+					name: "梦心DH",
+					email: "jdreamheart@163.com",
+					img: "../../static/img/logo.png",
+				},
 			}
 		},
 		onLoad() {
-
+			// 监听登录回调事件  
+			uni.$on("WS_LoginSuccess", this.onLoginSuccess);
+			// // 请求用户数据
+			// getApp().globalData.AppSocket.request("ReqUserInfo", {
+			// 	startId: startId,
+			// }, function(status, data){
+			// 	if (status == "success") {
+			// 		// if (data.isReLogin) {
+			// 		// 	// 弹出登录页面
+			// 		// 	return;
+			// 		// }
+			// 		// 更新用户信息
+			// 		this.userInfo = data.userInfo;
+			// 	}
+			// });
+		},
+		onUnload() {
+			uni.$off("WS_LoginSuccess", this.onLoginSuccess);
 		},
 		methods: {
+			onLoginSuccess(data) {
+				if (data.code == 0) {
+					this.isLogined = true;
+					this.userInfo = data.userInfo;
+				}
+			},
 			showScanView(e) {
-				
+				uni.scanCode({
+					onlyFromCamera: true,
+					scanType: ["qrCode"],
+					success: (data)=>{
+						var result = data.result;
+						console.log("scanCode:", result);
+						if (typeof(result) == "string") {
+							if (result.search(/^LoginWebKey:/) != -1) {
+								if (!this.isLogined) {
+									// 弹出登录页面
+									return;
+								}
+								var key = result.split(/^LoginWebKey:/)[1];
+								getApp().globalData.AppSocket.request("LoginWeb", {
+									login_md5: key,
+								}, function(status, data){
+									if (status == "success") {
+										if (data.isReLogin) {
+											// 弹出登录页面
+											return;
+										}
+										// 弹出登录成功的提示
+										
+									}
+								});
+								
+							}
+						}
+					}
+				});
 			},
 			showSettingsView(e) {
 				
 			},
 			showUserInfo(e) {
-				
+				if (!this.isLogined) {
+					// 跳转登录界面
+				} else {
+					// 跳转玩家信息界面，并请求玩家信息
+				}
 			}
 		}
 	}

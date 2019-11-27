@@ -15,9 +15,14 @@ BaseWS.prototype.newListenerIndex = function() {
     this._listenerIndex ++;
     return this._listenerIndex;
 };
-BaseWS.prototype.newRespCallbackIndex = function() {
+BaseWS.prototype.newRespCallbackKey = function() {
     this._respCallbackIndex = this._respCallbackIndex % 10000 + 1;
-    return this._respCallbackIndex;
+    var cbKey = String(this._respCallbackIndex);
+    while (cbKey in self._respCallbackMap) {
+        this._respCallbackIndex = this._respCallbackIndex % 10000 + 1;
+        cbKey = String(this._respCallbackIndex);
+    }
+    return cbKey;
 };
 BaseWS.prototype.getBaseName = function(suffix = "") {
     return this._baseName + suffix;
@@ -121,7 +126,7 @@ BaseWS.prototype.request = function(reqFuncName, msg, respFunc = null) {
     // 缓存回调函数，在onmessage中进行处理
     var respFuncName = "";
     if (typeof respFunc == "function") {
-        respFuncName = String(self.newRespCallbackIndex());
+        respFuncName = self.newRespCallbackKey();
         self._respCallbackMap[respFuncName] = respFunc;
     }
     // 发送消息

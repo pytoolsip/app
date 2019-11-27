@@ -31,7 +31,7 @@
 							<text class="loading-text">{{data.refreshText}}</text>
 						</div>
 					</refresh>
-					<cell v-for="(item,idx1) in data.items" :key="item.id">
+					<cell v-for="item in data.items" :key="item.id">
 						<media-item :options="item" @click="showDetail(item)"></media-item>
 					</cell>
 					<cell class="loading-more" v-if="data.isLoading || data.items.length > dataLenLimit">
@@ -41,7 +41,7 @@
 				<!-- #endif -->
 				<!-- #ifndef APP-NVUE -->
 				<scroll-view class="scroll-v" enableBackToTop="true" scroll-y @scrolltolower="loadMore(idx)" @scroll="onScroll" :scroll-top="data.scrollTop.current" scroll-with-animation="true">
-					<view v-for="(item,idx1) in data.items" :key="item.id">
+					<view v-for="item in data.items" :key="item.id">
 						<media-item :options="item" @click="showDetail(item)"></media-item>
 					</view>
 					<view class="loading-more" v-if="data.isLoading || data.length > dataLenLimit">
@@ -166,7 +166,7 @@
 			// 加载tab数据
 			loadTabData(index) {
 				let activeData = this.dataList[index];
-				if (activeData.isInTheEnd) {
+				if (activeData.isInTheEnd || activeData.isLoading) {
 					return;
 				}
 				// 标记正在加载
@@ -184,7 +184,7 @@
 				}, function(status, data){
 					if (status == "success") {
 						for (let i = 0; i < data.items.length; i++) {
-							activeData.items.push(data[i]);
+							activeData.items.push(data.items[i]);
 						}
 						// 标记加载完成
 						activeData.isLoading = false;
@@ -230,13 +230,16 @@
 			// 刷新tab数据
 			refreshTabData(index) {
 				let activeData = this.dataList[index];
+				if (activeData.isRefreshing) {
+					return;
+				}
 				// 标记正在刷新
 				activeData.isRefreshing = true;
 				activeData.refreshText = "正在刷新...";
 				// 获取请求参数
 				var endId = -1;
 				if (activeData.items.length > 0) {
-					endId = activeData.items[activeData.items.length - 1].id;
+					endId = activeData.items[0].id;
 				}
 				// 请求数据
 				getApp().globalData.AppSocket.request("ReqTools", {
@@ -245,7 +248,7 @@
 				}, function(status, data){
 					if (status == "success") {
 						for (let i = data.items.length - 1; i >= 0; i--) {
-							activeData.items.unshift(data[i]);
+							activeData.items.unshift(data.items[i]);
 						}
 						// 标记完成刷新
 						activeData.isRefreshing = false;
