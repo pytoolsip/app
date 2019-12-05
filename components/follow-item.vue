@@ -12,8 +12,8 @@
 			</view>
 		</view>
 		<view class="follow-body">
-			<media-item :options="options.content" @click="mediaClick" v-if="options.isMedia"></media-item>
-			<text class="follow-content" v-if="options.isText">{{options.content}}</text>
+			<media-item :options="options.content" @click="mediaClick" v-if="isMedia"></media-item>
+			<text class="follow-content" v-if="isText">{{options.content}}</text>
 		</view>
 		<view class="follow-footer">
 			<view class="follow-info flex-row">
@@ -40,6 +40,14 @@
 				default: function(e) {
 					return {}
 				}
+			}
+		},
+		computed: {
+			isMedia() {
+				return typeof(this.options.content) == "object";
+			},
+			isText() {
+				return typeof(this.options.content) == "string";
 			}
 		},
 		methods: {
